@@ -69,7 +69,7 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> searchItems(@RequestParam String text) {
-        if ((text == null) || (text.isBlank())) {
+        if (text.isBlank()) {
             return new ArrayList<>();
         } else return itemService.search(text);
     }
