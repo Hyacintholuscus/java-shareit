@@ -13,16 +13,26 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .countOfUses(item.getTenantIds().size())
+                .countOfUses((item.getTenantIds() == null) ? 0 : item.getTenantIds().size())
                 .build();
     }
 
-    public Item toItem(ItemDto dto) {
+    /*public Item toItem(ItemDto dto) {
         return Item.builder()
                 .id(dto.getId())
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .available(dto.getAvailable())
+                .build();
+    }*/
+
+    public Item toItem(Long ownerId, ItemDto dto) {
+        return Item.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .available(dto.getAvailable())
+                .ownerId(ownerId)
                 .build();
     }
 }

@@ -22,21 +22,13 @@ public class UserServiceImpl implements UserService {
     private final UserMapper mapper;
 
     @Override
-    public UserDto create(UserDto userDto) {
+    public UserDto save(UserDto userDto) {
         try {
             User user = userStorage.save(mapper.toUser(userDto));
             return mapper.toDto(user);
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicateException("This email is already in use.");
-        }
-    }
-
-    @Override
-    public UserDto update(UserDto userDto) {
-        try {
-            User updatedUser = userStorage.save(mapper.toUser(userDto));
-            return mapper.toDto(updatedUser);
-        } catch (DataIntegrityViolationException e) {
+            log.error("Запрос создать или обновить пользователя с используемым другим "
+                            + "пользователем адресом эл. почты {}", userDto.getEmail());
             throw new DuplicateException("This email is already in use.");
         }
     }
@@ -51,8 +43,8 @@ public class UserServiceImpl implements UserService {
     public UserDto getById(Long id) {
         User user = userStorage.findById(id).orElseThrow(() -> {
                 log.error("Запрос получить несуществующего пользователя с id {}.", id);
-                 return new NotFoundException(
-                String.format("User with id %d is not exist.", id)
+                return new NotFoundException(
+                        String.format("User with id %d is not exist.", id)
                 );
         });
         return mapper.toDto(user);

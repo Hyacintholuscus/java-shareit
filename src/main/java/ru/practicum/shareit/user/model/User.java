@@ -26,6 +26,6 @@ public class User {
     @Email(message = "Email must be in email address format.")
     @NotBlank(message = "Email shouldn't be empty.")
     private String email;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "ownerId")
     private List<Item> items;
 }

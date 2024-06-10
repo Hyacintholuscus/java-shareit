@@ -12,7 +12,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Repository
 @Slf4j
-public class InMemoryUserStorage implements UserStorage {
+public class InMemoryUserStorage implements UserOldStorage {
     private final Map<Long, User> users = new HashMap<>();
     private final Set<String> emails = new HashSet<>();
     private Long id = 0L;

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class InMemoryItemStorage implements ItemStorage {
+public class InMemoryItemStorage implements ItemInMemoryStorage {
     private final Map<Long, Item> items = new HashMap<>();
     private final Map<Long, List<Long>> usersItems = new HashMap<>();
     private Long id = 0L;
@@ -30,7 +30,7 @@ public class InMemoryItemStorage implements ItemStorage {
         log.debug("Запрос создать новый предмет.");
 
         Item newItem = item.withId(createId())
-                        .withOwnerId(userId)
+                        //.withOwnerId(userId)
                         .withTenantIds(new ArrayList<>());
         items.put(newItem.getId(), newItem);
 
@@ -63,10 +63,10 @@ public class InMemoryItemStorage implements ItemStorage {
         log.debug("Запрос удалить предмет с id {} от пользователя с id {}.", itemId, userId);
 
         Item item = items.remove(itemId);
-        if (item != null) {
+        /*if (item != null) {
             List<Long> itemIds = usersItems.get(item.getOwnerId());
             itemIds.remove(itemId);
-        }
+        }*/
         return itemId;
     }
 
