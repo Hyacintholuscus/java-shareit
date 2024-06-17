@@ -1,21 +1,23 @@
 package ru.practicum.shareit.booking.dto;
 
 import lombok.*;
-import ru.practicum.shareit.booking.validation.IsAfter;
 
 import javax.validation.constraints.Future;
-import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @With
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-@IsAfter(minDate = "start", maxDate = "end", message = "Start date must be before end date.")
 public class BookingRequestDto {
-    private Long id;
+    @NotNull
     @Future
-    private LocalDate start;
+    private LocalDateTime start;
+    @NotNull
     @Future
-    private LocalDate end;
+    private LocalDateTime end;
+    @NotNull
+    private Long itemId;
 }

@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentRequestDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +28,20 @@ public class ItemController {
     public ItemDto createItem(@RequestHeader("X-Sharer-User-Id")
                                   @Positive(message = "User's id should be positive")
                                   Long userId,
-            @RequestBody @Valid ItemDto itemDto) {
+                              @RequestBody @Valid ItemDto itemDto) {
         return itemService.create(userId, itemDto);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@PathVariable
+                                    @Positive(message = "Item's id should be positive")
+                                    Long itemId,
+                                    @RequestHeader("X-Sharer-User-Id")
+                                    @Positive(message = "User's id should be positive")
+                                    Long authorId,
+                                    @RequestBody @Valid CommentRequestDto commentRequestDto) {
+        LocalDateTime createdTime = LocalDateTime.now();
+        return itemService.createComment(itemId, authorId, createdTime, commentRequestDto);
     }
 
     @PatchMapping("{itemId}")
@@ -34,23 +49,30 @@ public class ItemController {
                                   @Positive(message = "Item's id should be positive")
                                   Long itemId,
                               @RequestHeader("X-Sharer-User-Id")
-                              @Positive(message = "User's id should be positive") Long userId,
+                              @Positive(message = "User's id should be positive")
+                              Long userId,
                               @RequestBody Map<String, Object> fields) {
-        return itemService.update(itemId, userId, fields);
+        LocalDateTime currentTime = LocalDateTime.now();
+        return itemService.update(itemId, userId, fields, currentTime);
     }
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@PathVariable
                                    @Positive(message = "Item's id should be positive")
-                                   Long itemId) {
-        return itemService.getById(itemId);
+                                   Long itemId,
+                               @RequestHeader("X-Sharer-User-Id")
+                               @Positive(message = "User's id should be positive")
+                               Long userId) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        return itemService.getById(userId, itemId, currentTime);
     }
 
     @GetMapping
     public List<ItemDto> getItemsByUser(@RequestHeader("X-Sharer-User-Id")
                                             @Positive(message = "User's id should be positive")
                                             Long userId) {
-        return itemService.getAllByUser(userId);
+        LocalDateTime currentTime = LocalDateTime.now();
+        return itemService.getAllByUser(userId, currentTime);
     }
 
     @GetMapping("/search")

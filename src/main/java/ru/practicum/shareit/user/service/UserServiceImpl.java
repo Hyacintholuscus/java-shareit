@@ -23,11 +23,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto save(UserDto userDto) {
+        log.info("Запрос создать или обновить пользователя.");
+
         try {
             User user = userStorage.save(mapper.toUser(userDto));
             return mapper.toDto(user);
         } catch (DataIntegrityViolationException e) {
-            log.error("Запрос создать или обновить пользователя с используемым другим "
+            log.error("Duplicate. Запрос создать или обновить пользователя с используемым другим "
                             + "пользователем адресом эл. почты {}", userDto.getEmail());
             throw new DuplicateException("This email is already in use.");
         }
@@ -35,14 +37,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long delete(Long id) {
+        log.info("Запрос удалить пользователя с id {}", id);
+
         userStorage.deleteById(id);
         return id;
     }
 
     @Override
     public UserDto getById(Long id) {
+        log.info("Запрос получить пользователя с id {}", id);
+
         User user = userStorage.findById(id).orElseThrow(() -> {
-                log.error("Запрос получить несуществующего пользователя с id {}.", id);
+                log.error("NotFound. Запрос получить несуществующего пользователя с id {}.", id);
                 return new NotFoundException(
                         String.format("User with id %d is not exist.", id)
                 );
@@ -52,6 +58,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
+        log.info("Запрос получить список пользователей");
         return userStorage.findAll().stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());

@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@With
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -29,6 +28,6 @@ public class Item {
     private Boolean available;
     @Column(name = "owner_id")
     private Long ownerId;
-    @Transient
-    private List<Long> tenantIds; // TODO: Возможно, убрать. Пользователи, которые брали вещь в аренду
+    @OneToMany(mappedBy = "itemId")
+    private List<Comment> comments;
 }
