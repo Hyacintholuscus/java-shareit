@@ -11,6 +11,7 @@ import ru.practicum.shareit.exception.BadRequestException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -70,7 +71,8 @@ public class BookingController {
                                                 @Positive(message = "User's id should be positive")
                                                 Long bookerId,
                                             @RequestParam(defaultValue = "ALL") String state) {
-        return bookingService.findAllByBooker(bookerId, state);
+        LocalDateTime currentTime = LocalDateTime.now();
+        return bookingService.findAllByBooker(bookerId, state, currentTime);
     }
 
     @GetMapping("/owner")
@@ -78,6 +80,7 @@ public class BookingController {
                                                @Positive(message = "User's id should be positive")
                                                Long bookerId,
                                            @RequestParam(defaultValue = "ALL") String state) {
-        return bookingService.findAllByOwnerItems(bookerId, state);
+        LocalDateTime currentTime = LocalDateTime.now();
+        return bookingService.findAllByOwnerItems(bookerId, state, currentTime);
     }
 }

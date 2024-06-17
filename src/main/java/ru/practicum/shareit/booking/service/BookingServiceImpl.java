@@ -141,18 +141,18 @@ public class BookingServiceImpl  implements BookingService {
     }
 
     @Override
-    public List<BookingDto> findAllByBooker(Long bookerId, String state) {
+    public List<BookingDto> findAllByBooker(Long bookerId, String state, LocalDateTime currentTime) {
         User booker = getUser(bookerId);
         Sort sort = Sort.by(Sort.Direction.DESC, "startDate");
         List<Booking> bookings = new ArrayList<>();
         switch (state) {
             case "CURRENT":
                 log.info("Запрос от бронирующего с id {} получить список текущих бронирований.", bookerId);
-                bookings = bookingStorage.findCurrentByBookerId(bookerId, LocalDateTime.now(), sort);
+                bookings = bookingStorage.findCurrentByBookerId(bookerId, currentTime, sort);
                 break;
             case "FUTURE":
                 log.info("Запрос от бронирующего с id {} получить список будущих бронирований.", bookerId);
-                bookings = bookingStorage.findByBookerIdAndStartDateIsAfter(bookerId, LocalDateTime.now(), sort);
+                bookings = bookingStorage.findByBookerIdAndStartDateIsAfter(bookerId, currentTime, sort);
                 break;
             case "WAITING":
                 log.info("Запрос от бронирующего с id {} получить список бронирований, ожидающих подтверждения.",
@@ -165,7 +165,7 @@ public class BookingServiceImpl  implements BookingService {
                 break;
             case "PAST":
                 log.info("Запрос от бронирующего с id {} получить список завершённых бронирований.", bookerId);
-                bookings = bookingStorage.findByBookerIdAndEndDateIsBefore(bookerId, LocalDateTime.now(), sort);
+                bookings = bookingStorage.findByBookerIdAndEndDateIsBefore(bookerId, currentTime, sort);
                 break;
             case "ALL":
                 log.info("Запрос от бронирующего с id {} получить список всех бронирований.", bookerId);
@@ -180,7 +180,7 @@ public class BookingServiceImpl  implements BookingService {
     }
 
     @Override
-    public List<BookingDto> findAllByOwnerItems(Long ownerId, String state) {
+    public List<BookingDto> findAllByOwnerItems(Long ownerId, String state, LocalDateTime currentTime) {
         User owner = getUser(ownerId);
         if (owner.getItems().isEmpty()) {
             return new ArrayList<>();
@@ -190,11 +190,11 @@ public class BookingServiceImpl  implements BookingService {
         switch (state) {
             case "CURRENT":
                 log.info("Запрос от владельца вещей с id {} получить список текущих бронирований.", ownerId);
-                bookings = bookingStorage.findCurrentByOwner(ownerId, LocalDateTime.now(), sort);
+                bookings = bookingStorage.findCurrentByOwner(ownerId, currentTime, sort);
                 break;
             case "FUTURE":
                 log.info("Запрос от владельца вещей с id {} получить список будущих бронирований.", ownerId);
-                bookings = bookingStorage.findFutureByOwner(ownerId, LocalDateTime.now(), sort);
+                bookings = bookingStorage.findFutureByOwner(ownerId, currentTime, sort);
                 break;
             case "WAITING":
                 log.info("Запрос от владельца вещей с id {} получить список бронирований, ожидающих подтверждения.",
@@ -207,7 +207,7 @@ public class BookingServiceImpl  implements BookingService {
                 break;
             case "PAST":
                 log.info("Запрос от владельца вещей с id {} получить список завершённых бронирований.", ownerId);
-                bookings = bookingStorage.findPastByOwner(ownerId, LocalDateTime.now(), sort);
+                bookings = bookingStorage.findPastByOwner(ownerId, currentTime, sort);
                 break;
             case "ALL":
                 log.info("Запрос от владельца вещей с id {} получить список всех бронирований.", ownerId);
