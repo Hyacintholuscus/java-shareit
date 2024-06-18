@@ -10,5 +10,5 @@ import javax.validation.constraints.Size;
 public class CommentRequestDto {
     @NotBlank
     @Size(max = 1000, message = "Text's size shouldn't be more than 1000 characters")
-    String text;
+    private String text;
 }
