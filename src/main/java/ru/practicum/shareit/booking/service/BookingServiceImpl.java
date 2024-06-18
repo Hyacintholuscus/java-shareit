@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BookingServiceImpl  implements BookingService {
     private final BookingStorage bookingStorage;
@@ -34,6 +36,7 @@ public class BookingServiceImpl  implements BookingService {
     private final UserStorage userStorage;
     private final BookingMapper mapper;
 
+    @Transactional(readOnly = true)
     private User getUser(Long userId) {
         return userStorage.findById(userId).orElseThrow(() -> {
             log.error("NoAccess. Запрос при бронировании от несуществующего пользователя с id {}.", userId);
@@ -121,6 +124,7 @@ public class BookingServiceImpl  implements BookingService {
         return bookingId;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public BookingDto findById(Long userId, Long bookingId) {
         log.info("Запрос на просмотр бронирования с id {} от пользователя с id {}", bookingId, userId);
@@ -140,6 +144,7 @@ public class BookingServiceImpl  implements BookingService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<BookingDto> findAllByBooker(Long bookerId, String state, LocalDateTime currentTime) {
         User booker = getUser(bookerId);
@@ -179,6 +184,7 @@ public class BookingServiceImpl  implements BookingService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<BookingDto> findAllByOwnerItems(Long ownerId, String state, LocalDateTime currentTime) {
         User owner = getUser(ownerId);

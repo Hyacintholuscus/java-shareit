@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemStorage itemStorage;
@@ -41,6 +43,7 @@ public class ItemServiceImpl implements ItemService {
     private final CommentMapper commentMapper;
     private final BookingMapper bookingMapper;
 
+    @Transactional(readOnly = true)
     private void checkUserId(Long userId) {
         if (!userStorage.existsById(userId)) {
             log.error("NotFound. Запрос на действие с предметом от несуществующего пользователя с id {}.", userId);
@@ -50,6 +53,7 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    @Transactional(readOnly = true)
     private ItemDto getItemDtoWithBookings(Item item, LocalDateTime currentTime) {
         List<Booking> bookings = bookingStorage.findLastAndNextForItem(item.getId(), currentTime);
         if (bookings.isEmpty()) {
@@ -129,6 +133,7 @@ public class ItemServiceImpl implements ItemService {
         return itemId;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ItemDto getById(Long userId, Long itemId, LocalDateTime currentTime) {
         log.info("Запрос пользователя с id {} на получение предмета с id {}.", userId, itemId);
@@ -144,6 +149,7 @@ public class ItemServiceImpl implements ItemService {
         } else return mapper.toDto(item);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ItemDto> getAllByUser(Long userId, LocalDateTime currentTime) {
         log.info("Запрос получить список вещей от пользователя с id {}", userId);
@@ -154,6 +160,7 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ItemDto> search(String text) {
         log.info("Запрос на поиск вещей");

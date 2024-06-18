@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.DuplicateException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
@@ -43,6 +45,7 @@ public class UserServiceImpl implements UserService {
         return id;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDto getById(Long id) {
         log.info("Запрос получить пользователя с id {}", id);
@@ -56,6 +59,7 @@ public class UserServiceImpl implements UserService {
         return mapper.toDto(user);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<UserDto> getAll() {
         log.info("Запрос получить список пользователей");
