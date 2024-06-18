@@ -22,7 +22,7 @@ public class UserController {
 
     @PostMapping
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        return userService.create(userDto);
+        return userService.save(userDto);
     }
 
     @PatchMapping("/{id}")
@@ -37,7 +37,7 @@ public class UserController {
             field.setAccessible(true);
             ReflectionUtils.setField(field, userDto, v);
         });
-        return userService.update(userDto);
+        return userService.save(userDto);
     }
 
     @GetMapping
