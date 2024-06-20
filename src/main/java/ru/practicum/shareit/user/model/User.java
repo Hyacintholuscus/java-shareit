@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.model;
 import lombok.*;
 
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.ItemRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -30,6 +31,8 @@ public class User {
     private String email;
     @OneToMany(mappedBy = "ownerId")
     private List<Item> items;
+    @OneToMany(mappedBy = "ownerId")
+    private List<ItemRequest> requests;
 
     @Override
     public boolean equals(Object o) {

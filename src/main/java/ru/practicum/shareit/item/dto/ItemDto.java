@@ -15,10 +15,10 @@ import java.util.List;
 @Builder
 public class ItemDto {
     Long id;
-    @NotBlank(message = "Name shouldn't be empty.")
+    @NotBlank(message = "Name shouldn't be blank.")
     @Size(max = 60, message = "Name's size shouldn't be more than 60 characters")
     String name;
-    @NotBlank(message = "Description shouldn't be empty.")
+    @NotBlank(message = "Description shouldn't be blank.")
     @Size(max = 200, message = "Description's size shouldn't be more than 200 characters")
     String description;
     @NotNull(message = "Status 'available' shouldn't be empty.")
@@ -26,4 +26,5 @@ public class ItemDto {
     BookingItemDto lastBooking;
     BookingItemDto nextBooking;
     List<CommentDto> comments;
+    Long requestId;
 }

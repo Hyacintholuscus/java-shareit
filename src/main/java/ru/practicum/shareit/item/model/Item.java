@@ -32,6 +32,8 @@ public class Item {
     private Long ownerId;
     @OneToMany(mappedBy = "itemId")
     private List<Comment> comments;
+    @Column(name = "request_id")
+    private Long requestId;
 
     @Override
     public boolean equals(Object o) {
