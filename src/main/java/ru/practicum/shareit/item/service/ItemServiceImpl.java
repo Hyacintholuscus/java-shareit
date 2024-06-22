@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
@@ -21,13 +22,13 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentStorage;
 import ru.practicum.shareit.item.storage.ItemStorage;
+import ru.practicum.shareit.request.storage.ItemRequestStorage;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,6 +40,7 @@ public class ItemServiceImpl implements ItemService {
     private final CommentStorage commentStorage;
     private final UserStorage userStorage;
     private final BookingStorage bookingStorage;
+    private final ItemRequestStorage requestStorage;
     private final ItemMapper mapper;
     private final CommentMapper commentMapper;
     private final BookingMapper bookingMapper;
@@ -70,11 +72,57 @@ public class ItemServiceImpl implements ItemService {
         return mapper.toDto(item, lastBooking, nextBooking);
     }
 
+    @Transactional(readOnly = true)
+    private List<ItemDto> getListItemDtoWithBookings(List<Item> items, LocalDateTime currentTime) {
+        if (items.isEmpty()) return new ArrayList<>();
+        Set<Long> itemId = items.stream()
+                .map(Item::getId)
+                .collect(Collectors.toSet());
+
+        List<Booking> bookingList = bookingStorage.findLastAndNextForItem(itemId, currentTime);
+        if (bookingList.isEmpty()) {
+            return items.stream()
+                    .map(mapper::toDto)
+                    .collect(Collectors.toList());
+        }
+        Map<Long, List<Booking>> bookings = bookingList.stream()
+                .collect(Collectors.groupingBy(b -> b.getItem().getId()));
+        LinkedList<ItemDto> dtos = new LinkedList<>();
+        for (Item item : items) {
+            ItemDto dto;
+            List<Booking> itemBookings = bookings.get(item.getId());
+            BookingItemDto lastBooking = null;
+            BookingItemDto nextBooking = null;
+            if (itemBookings == null) {
+                dto = mapper.toDto(item);
+            } else {
+                for (Booking booking : itemBookings) {
+                    if ((booking.getEndDate().isBefore(currentTime)
+                            || (booking.getStartDate().isBefore(currentTime)
+                            && booking.getEndDate().isAfter(currentTime)))) {
+                        lastBooking = bookingMapper.toItemDto(booking);
+                    } else nextBooking = bookingMapper.toItemDto(booking);
+                }
+                dto = mapper.toDto(item, lastBooking, nextBooking);
+            }
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
     @Override
     public ItemDto create(Long userId, ItemDto itemDto) {
         log.info("Запрос создать вещь от пользователя с id {}", userId);
 
         checkUserId(userId);
+        if (itemDto.getRequestId() != null) {
+            if (!requestStorage.existsById(itemDto.getRequestId())) {
+                log.error("NotFound. Запрос на создание предмета в ответ на несуществующий запрос с id {}.",
+                        itemDto.getRequestId());
+                throw new NotFoundException(
+                        String.format("ItemRequest with id %d is not exist.", itemDto.getId()));
+            }
+        }
         Item item = mapper.toItem(userId, itemDto);
         return mapper.toDto(itemStorage.save(item));
     }
@@ -151,21 +199,25 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ItemDto> getAllByUser(Long userId, LocalDateTime currentTime) {
+    public List<ItemDto> getAllByUser(Long userId, LocalDateTime currentTime, Pageable pageable) {
         log.info("Запрос получить список вещей от пользователя с id {}", userId);
 
         checkUserId(userId);
-        return itemStorage.findAllByOwnerId(userId).stream()
-                .map(item -> getItemDtoWithBookings(item, currentTime))
-                .collect(Collectors.toList());
+        User user = userStorage.findById(userId).orElseThrow(() -> new NotFoundException("Not found"));
+
+        int from = Math.toIntExact(pageable.getOffset());
+        int size = Math.min((from + pageable.getPageSize()), user.getItems().size());
+
+        List<Item> items = user.getItems().subList(from, size);
+        return getListItemDtoWithBookings(items, currentTime);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<ItemDto> search(String text) {
+    public List<ItemDto> search(String text, Pageable pageable) {
         log.info("Запрос на поиск вещей");
 
-        return itemStorage.search(text).stream()
+        return itemStorage.search(text, pageable).stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
