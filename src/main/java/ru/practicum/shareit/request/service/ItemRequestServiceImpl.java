@@ -51,6 +51,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return mapper.toDto(itemRequestStorage.save(request));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ItemRequestDto getById(Long userId, Long requestId) {
         log.info("Получение запроса с id {} от пользователя с id {}", requestId, userId);
@@ -65,6 +66,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return mapper.toDto(request);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ItemRequestDto> getByOwnerId(Long userId) {
         log.info("Получение запросов от пользователя с id {}", userId);
@@ -81,6 +83,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ItemRequestDto> getAll(Long userId, int from, int size) {
         log.info("Получение запросов других пользователей от пользователя с id {}", userId);

@@ -8,6 +8,7 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Component
@@ -20,7 +21,8 @@ public class ItemRequestMapper {
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())
                 .created(itemRequest.getCreationDate())
-                .items(itemRequest.getItems().stream()
+                .items((itemRequest.getItems() == null) ? new ArrayList<>() :
+                        itemRequest.getItems().stream()
                         .map(itemMapper::toDto)
                         .collect(Collectors.toList()))
                 .build();

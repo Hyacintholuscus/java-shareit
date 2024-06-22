@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.booking.controller.BookingController;
 import ru.practicum.shareit.item.controller.ItemController;
+import ru.practicum.shareit.request.controller.ItemRequestController;
 import ru.practicum.shareit.user.controller.UserController;
 
 import javax.validation.ValidationException;
@@ -20,7 +21,8 @@ import java.util.Map;
 @RestControllerAdvice(assignableTypes = {
         UserController.class,
         ItemController.class,
-        BookingController.class})
+        BookingController.class,
+        ItemRequestController.class})
 public class ErrorHandler {
     private void log(Throwable e) {
         log.error("Исключение {}: {}", e, e.getMessage());
