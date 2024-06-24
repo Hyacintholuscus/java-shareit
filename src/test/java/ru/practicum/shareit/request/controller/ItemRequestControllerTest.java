@@ -86,16 +86,13 @@ class ItemRequestControllerTest {
         assertEquals(400, createItemRequestResponse(-1L, createDto).getStatus());
 
         // Проверка валидации описания
-        CreateItemRequestDto createDtoNullDesc = CreateItemRequestDto.builder()
-                .description(null)
-                .build();
-
+        CreateItemRequestDto createDtoNullDesc = createDto.withDescription(null);
         assertEquals(400, createItemRequestResponse(1L, createDtoNullDesc).getStatus());
 
-        CreateItemRequestDto createDtoBlankDesc = CreateItemRequestDto.builder()
-                .description("")
-                .build();
+        CreateItemRequestDto createDtoBlankDesc = createDto.withDescription("");
+        assertEquals(400, createItemRequestResponse(1L, createDtoBlankDesc).getStatus());
 
+        CreateItemRequestDto createDto301CharDesc = createDto.withDescription("r".repeat(301));
         assertEquals(400, createItemRequestResponse(1L, createDtoBlankDesc).getStatus());
 
         verifyNoInteractions(itemRequestService);
@@ -203,10 +200,10 @@ class ItemRequestControllerTest {
         assertEquals(400, getAllItemRequestsResponse(0L, 0, 5).getStatus());
         assertEquals(400, getAllItemRequestsResponse(-1L, 0, 5).getStatus());
 
-        // Проверка валидации size
+        // Проверка валидации from
         assertEquals(400, getAllItemRequestsResponse(1L, -1, 5).getStatus());
 
-        // Проверка валидации
+        // Проверка валидации size
         assertEquals(400, getAllItemRequestsResponse(1L, 0, 0).getStatus());
         assertEquals(400, getAllItemRequestsResponse(1L, 0, -1).getStatus());
 
