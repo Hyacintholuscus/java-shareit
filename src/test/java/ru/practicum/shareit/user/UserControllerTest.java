@@ -72,30 +72,25 @@ public class UserControllerTest {
     @Test
     public void shouldReturn400WhenWrongCreateUser() throws Exception {
         // Проверка валидации имени
-        userDto = UserDto.builder()
-                .name("")
-                .email("user@email.ru")
-                .build();
-        assertEquals(400, createUserResponse(userDto).getStatus());
+        userDto = createDto();
+        UserDto dtoBlankName = userDto.withName("");
+        assertEquals(400, createUserResponse(dtoBlankName).getStatus());
 
-        UserDto dtoNullName = UserDto.builder()
-                .name(null)
-                .email("user@email.ru")
-                .build();
+        UserDto dtoNullName =userDto.withName(null);
         assertEquals(400, createUserResponse(dtoNullName).getStatus());
 
+        UserDto dto201CharName = userDto.withName("u".repeat(201));
+        assertEquals(400, createUserResponse(dto201CharName).getStatus());
+
         // Проверка валидации email
-        UserDto dtoNullEmail = UserDto.builder()
-                .name("user")
-                .email(null)
-                .build();
+        UserDto dtoNullEmail = userDto.withEmail(null);
         assertEquals(400, createUserResponse(dtoNullEmail).getStatus());
 
-        UserDto dtoWrongEmail = UserDto.builder()
-                .name("user")
-                .email("email")
-                .build();
+        UserDto dtoWrongEmail = userDto.withEmail("email");
         assertEquals(400, createUserResponse(dtoWrongEmail).getStatus());
+
+        UserDto dto201CharEmail = userDto.withEmail("e".repeat(201));
+        assertEquals(400, createUserResponse(dto201CharEmail).getStatus());
 
         verifyNoInteractions(userService);
     }
