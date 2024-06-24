@@ -6,6 +6,7 @@ import lombok.extern.jackson.Jacksonized;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+@With
 @Value
 @Builder
 @Jacksonized
