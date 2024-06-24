@@ -6,7 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.dto.CreateBookingDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -39,7 +39,7 @@ public class BookingMapper {
                 .build();
     }
 
-    public Booking toBooking(BookingRequestDto dto, User booker, Item item) {
+    public Booking toBooking(CreateBookingDto dto, User booker, Item item) {
         return Booking.builder()
                 .startDate(dto.getStart())
                 .endDate(dto.getEnd())

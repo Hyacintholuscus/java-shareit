@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Value
 @Builder
-public class BookingRequestDto {
+public class CreateBookingDto {
     @NotNull(message = "Start time shouldn't be null.")
     @Future(message = "Start time should be in future.")
     LocalDateTime start;

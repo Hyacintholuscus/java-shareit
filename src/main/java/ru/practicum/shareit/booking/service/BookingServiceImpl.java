@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.dto.CreateBookingDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.storage.BookingStorage;
 import ru.practicum.shareit.exception.NoAccessException;
@@ -51,7 +51,7 @@ public class BookingServiceImpl  implements BookingService {
     }
 
     @Override
-    public BookingDto create(Long bookerId, BookingRequestDto requestDto) {
+    public BookingDto create(Long bookerId, CreateBookingDto requestDto) {
         log.info("Запрос на создание бронирования от пользователя с id {}", bookerId);
 
         if (!requestDto.getStart().isBefore(requestDto.getEnd())) {
