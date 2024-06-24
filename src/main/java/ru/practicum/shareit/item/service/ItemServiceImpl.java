@@ -14,7 +14,7 @@ import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.NoAccessException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.CommentRequestDto;
+import ru.practicum.shareit.item.dto.CreateCommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -131,7 +131,7 @@ public class ItemServiceImpl implements ItemService {
     public CommentDto createComment(Long itemId,
                                     Long authorId,
                                     LocalDateTime createdTime,
-                                    CommentRequestDto commentRequestDto) {
+                                    CreateCommentDto commentRequestDto) {
         log.info("Запрос создать комментарий на вещь с id{} от пользователя с id {}", itemId, authorId);
 
         List<Booking> bookings = bookingStorage.findBookingToComment(authorId, itemId, createdTime);

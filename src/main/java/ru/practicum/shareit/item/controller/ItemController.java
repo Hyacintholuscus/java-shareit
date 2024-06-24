@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.CommentRequestDto;
+import ru.practicum.shareit.item.dto.CreateCommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -43,7 +42,7 @@ public class ItemController {
                                     @RequestHeader("X-Sharer-User-Id")
                                     @Positive(message = "User's id should be positive")
                                     Long authorId,
-                                    @RequestBody @Valid CommentRequestDto commentRequestDto) {
+                                    @RequestBody @Valid CreateCommentDto commentRequestDto) {
         LocalDateTime createdTime = LocalDateTime.now();
         return itemService.createComment(itemId, authorId, createdTime, commentRequestDto);
     }

@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.CommentRequestDto;
+import ru.practicum.shareit.item.dto.CreateCommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import java.util.Map;
 public interface ItemService {
     ItemDto create(Long userId, ItemDto itemDto);
 
-    CommentDto createComment(Long itemId, Long authorId, LocalDateTime createdTime, CommentRequestDto commentRequestDto);
+    CommentDto createComment(Long itemId, Long authorId, LocalDateTime createdTime, CreateCommentDto commentRequestDto);
 
     ItemDto update(Long itemId, Long userId, Map<String, Object> fields, LocalDateTime currentTime);
 
