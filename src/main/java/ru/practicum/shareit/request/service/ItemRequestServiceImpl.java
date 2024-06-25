@@ -89,7 +89,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         log.info("Получение запросов других пользователей от пользователя с id {}", userId);
 
         checkUser(userId);
-        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "creationDate"));
+        int page = from / size;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "creationDate"));
         return itemRequestStorage.findByOwnerIdNot(userId, pageable).stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
