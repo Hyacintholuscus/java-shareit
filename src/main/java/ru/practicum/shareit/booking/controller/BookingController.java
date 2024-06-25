@@ -76,7 +76,7 @@ public class BookingController {
                                                 @Positive(message = "Parameter 'size' should be positive")
                                                 int size) {
         LocalDateTime currentTime = LocalDateTime.now();
-        int page = (from + 1) / size;
+        int page = from / size;
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "startDate"));
         return bookingService.findAllByBooker(bookerId, state, currentTime, pageable);
     }
@@ -93,7 +93,8 @@ public class BookingController {
                                                @Positive(message = "Parameter 'size' should be positive")
                                                int size) {
         LocalDateTime currentTime = LocalDateTime.now();
-        Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "startDate"));
+        int page = from / size;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "startDate"));
         return bookingService.findAllByOwnerItems(ownerId, state, currentTime, pageable);
     }
 }
