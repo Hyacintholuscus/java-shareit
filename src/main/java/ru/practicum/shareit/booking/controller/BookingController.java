@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.CreateBookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.exception.BadRequestException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -42,11 +41,6 @@ public class BookingController {
                                    @Positive(message = "Booking's id should be positive")
                                    Long bookingId,
                                    @RequestParam Boolean approved) {
-        if (approved == null) {
-            log.error("BadRequest. Смена статуса бронирования (id {}) " +
-                    "на null от пользователя с  id {}", bookingId, ownerId);
-            throw new BadRequestException("Parameter approved should be true or false");
-        }
         return bookingService.updateStatus(ownerId, bookingId, approved);
     }
 
@@ -90,7 +84,7 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingDto> findAllByOwner(@RequestHeader("X-Sharer-User-Id")
                                                @Positive(message = "User's id should be positive")
-                                               Long bookerId,
+                                               Long ownerId,
                                            @RequestParam(defaultValue = "ALL") String state,
                                            @RequestParam(defaultValue = "0")
                                                @PositiveOrZero(message = "Parameter 'from' should be positive or zero")
@@ -100,6 +94,6 @@ public class BookingController {
                                                int size) {
         LocalDateTime currentTime = LocalDateTime.now();
         Pageable pageable = PageRequest.of(from, size, Sort.by(Sort.Direction.DESC, "startDate"));
-        return bookingService.findAllByOwnerItems(bookerId, state, currentTime, pageable);
+        return bookingService.findAllByOwnerItems(ownerId, state, currentTime, pageable);
     }
 }
