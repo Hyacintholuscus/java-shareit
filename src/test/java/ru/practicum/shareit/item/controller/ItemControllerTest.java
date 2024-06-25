@@ -86,6 +86,7 @@ class ItemControllerTest {
 
         assertEquals(200, response.getStatus());
         assertEquals(mapper.writeValueAsString(itemDto), response.getContentAsString());
+
         verify(itemService, times(1))
                 .create(anyLong(), any(ItemDto.class));
         verifyNoMoreInteractions(itemService);
