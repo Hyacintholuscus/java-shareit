@@ -21,9 +21,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -172,7 +170,9 @@ public class BookingServiceImpl  implements BookingService {
                 break;
             case "PAST":
                 log.info("Запрос от бронирующего с id {} получить список завершённых бронирований.", bookerId);
-                bookings = bookingStorage.findByBookerIdAndEndDateIsBefore(bookerId, currentTime, pageable);
+                Set<BookingStatus> statuses = Set.of(BookingStatus.WAITING, BookingStatus.REJECTED);
+                bookings = bookingStorage.findByBookerIdAndEndDateIsBeforeAndStatusNotIn(bookerId,
+                        currentTime, pageable, statuses);
                 break;
             case "ALL":
                 log.info("Запрос от бронирующего с id {} получить список всех бронирований.", bookerId);

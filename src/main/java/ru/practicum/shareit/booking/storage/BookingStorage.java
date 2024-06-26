@@ -29,7 +29,8 @@ public interface BookingStorage extends JpaRepository<Booking, Long>  {
     List<Booking> findByBookerIdAndStartDateIsAfter(Long bookerId, LocalDateTime startDate, Pageable pageable);
 
     // Поиск завершённых бронирований
-    List<Booking> findByBookerIdAndEndDateIsBefore(Long bookerId, LocalDateTime endDate, Pageable pageable);
+    List<Booking> findByBookerIdAndEndDateIsBeforeAndStatusNotIn(Long bookerId, LocalDateTime endDate,
+                                                                 Pageable pageable, Set<BookingStatus> statuses);
 
     // Поиск ожидающих подтверждения и отклонённых бронирований
     List<Booking> findByBookerIdAndStatusIs(Long bookerId, BookingStatus status, Pageable pageable);
