@@ -75,7 +75,7 @@ public class UserControllerTest {
         UserDto dtoBlankName = userDto.withName("");
         assertEquals(400, createUserResponse(dtoBlankName).getStatus());
 
-        UserDto dtoNullName =userDto.withName(null);
+        UserDto dtoNullName = userDto.withName(null);
         assertEquals(400, createUserResponse(dtoNullName).getStatus());
 
         UserDto dto201CharName = userDto.withName("u".repeat(201));

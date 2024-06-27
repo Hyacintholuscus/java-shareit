@@ -47,7 +47,7 @@ class BookingControllerTest {
                 .status(BookingStatus.WAITING)
                 .build();
     }
-    
+
     private CreateBookingDto getForcreateBookingDto() {
         return CreateBookingDto.builder()
                 .start(LocalDateTime.now().plusMinutes(5))
@@ -67,14 +67,14 @@ class BookingControllerTest {
                 .andReturn();
         return result.getResponse();
     }
-    
+
     @Test
     void shouldCreateBooking() throws Exception {
         creationDto = getForcreateBookingDto();
         bookingDto = createBookingDto();
         when(bookingService.create(anyLong(), any(CreateBookingDto.class)))
                 .thenReturn(bookingDto);
-        
+
         response = createBookingResponse(1L, creationDto);
 
         assertEquals(200, response.getStatus());

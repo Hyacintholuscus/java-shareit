@@ -186,7 +186,7 @@ public class ItemRequestServiceImplTest {
         // Проверка проброса исключения NotFoundException с несуществующим userId
         final Long userId = 9999L;
         final Exception exception = assertThrows(NotFoundException.class, () -> {
-            itemRequestService.getAll(userId, 0 , 5);
+            itemRequestService.getAll(userId, 0, 5);
         });
         final String expectedMessage = String.format("User with id %d is not exist.", userId);
         final String actualMessage = exception.getMessage();
