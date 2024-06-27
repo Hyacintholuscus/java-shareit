@@ -17,6 +17,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
+@Generated
 @Entity
 @Table(name = "users")
 public class User {

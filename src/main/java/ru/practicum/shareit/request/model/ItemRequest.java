@@ -13,6 +13,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
+@Generated
 @Entity
 @Table(name = "item_requests")
 public class ItemRequest {

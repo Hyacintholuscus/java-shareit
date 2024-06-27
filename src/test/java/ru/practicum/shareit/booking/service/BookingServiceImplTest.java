@@ -216,6 +216,11 @@ class BookingServiceImplTest {
         assertNotNull(deletedId);
         assertEquals(bookingDto.getId(), deletedId);
 
+        // Проверка повторного удаления бронирования
+        final Long repeatDeletedId = bookingService.delete(booker.getId(), bookingDto.getId());
+        assertNotNull(repeatDeletedId);
+        assertEquals(bookingDto.getId(), repeatDeletedId);
+
         // Проверка получения несуществующего бронирования
         final Exception exception = assertThrows(NotFoundException.class, () -> {
             bookingService.findById(booker.getId(), bookingDto.getId());
@@ -223,6 +228,7 @@ class BookingServiceImplTest {
         final String expectedMessage = String.format("Booking with id %d is not exist.", bookingDto.getId());
         final String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
+
     }
 
     @Test
@@ -250,7 +256,7 @@ class BookingServiceImplTest {
         assertEquals(bookingDto, receivedBookerDto);
 
         // Проверка получения бронирования валдельцем предмета
-        final BookingDto receivedOwnerItemDto = bookingService.findById(booker.getId(), bookingDto.getId());
+        final BookingDto receivedOwnerItemDto = bookingService.findById(ownerItem.getId(), bookingDto.getId());
         assertNotNull(receivedOwnerItemDto);
         assertEquals(bookingDto, receivedOwnerItemDto);
     }

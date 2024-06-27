@@ -101,11 +101,13 @@ public class ItemRequestServiceImplTest {
         final LocalDateTime creationTime = LocalDateTime.now().truncatedTo(ChronoUnit.MICROS);
         requestDto = itemRequestService.create(user.getId(), creationTime, creationRequestDto);
 
+        // Проверка получения списка запросов
         final List<ItemRequestDto> receivedList = itemRequestService.getByOwnerId(user.getId());
         assertNotNull(receivedList);
         assertEquals(1, receivedList.size());
         assertTrue(receivedList.contains(requestDto));
 
+        // Проверка с пустым листом
         User newUser = userStorage.save(User.builder()
                 .name("new user")
                 .email("newuser@email.ru")
