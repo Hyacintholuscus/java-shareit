@@ -463,6 +463,14 @@ class BookingServiceImplTest {
                 5,
                 Sort.by(Sort.Direction.DESC, "startDate"));
 
+        // Проверка с пустым списком
+        List<BookingDto> emptyBookings = bookingService.findAllByOwnerItems(booker.getId(),
+                "All",
+                LocalDateTime.now(),
+                pageable);
+        assertNotNull(emptyBookings);
+        assertTrue(emptyBookings.isEmpty());
+
         final Item secondItem = itemStorage.save(Item.builder()
                 .name("second item")
                 .description("second description")
@@ -477,12 +485,12 @@ class BookingServiceImplTest {
                 .itemId(secondItem.getId())
                 .build();
         bookingDto = bookingService.create(booker.getId(), creationDto);
-        final BookingDto secondDto = bookingService.create(booker.getId(), creationSecondDto);
+        final BookingDto secondBookingDto = bookingService.create(booker.getId(), creationSecondDto);
         assertNotNull(bookingDto);
-        assertNotNull(secondDto);
+        assertNotNull(secondBookingDto);
 
             // Ожидаемый список бронирований для проверки текущих, будущих и ожидающих подтверждения
-        final List<BookingDto> expectedBookings = new ArrayList<>(List.of(bookingDto, secondDto));
+        final List<BookingDto> expectedBookings = new ArrayList<>(List.of(bookingDto, secondBookingDto));
         expectedBookings.sort(Comparator.comparing(BookingDto::getStart, Comparator.reverseOrder()));
 
         // Проверка получения текущих бронирований по владельцу вещи
@@ -558,7 +566,7 @@ class BookingServiceImplTest {
                 bookingDto.getId(),
                 true);
         final BookingDto dtoSecondApproved = bookingService.updateStatus(ownerItem.getId(),
-                secondDto.getId(),
+                secondBookingDto.getId(),
                 true);
         assertNotNull(dtoFirstApproved);
         assertNotNull(dtoSecondApproved);
