@@ -120,7 +120,7 @@ public class ItemServiceImpl implements ItemService {
                 log.error("NotFound. Запрос на создание предмета в ответ на несуществующий запрос с id {}.",
                         itemDto.getRequestId());
                 throw new NotFoundException(
-                        String.format("ItemRequest with id %d is not exist.", itemDto.getId()));
+                        String.format("ItemRequest with id %d is not exist.", itemDto.getRequestId()));
             }
         }
         Item item = mapper.toItem(userId, itemDto);
@@ -202,8 +202,12 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getAllByUser(Long userId, LocalDateTime currentTime, Pageable pageable) {
         log.info("Запрос получить список вещей от пользователя с id {}", userId);
 
-        checkUserId(userId);
-        User user = userStorage.findById(userId).orElseThrow(() -> new NotFoundException("Not found"));
+        User user = userStorage.findById(userId).orElseThrow(() -> {
+            log.error("NotFound. Запрос на получение списка предметов от несуществующего пользователя с id {}.", userId);
+            return new NotFoundException(
+                    String.format("User with id %d is not exist.", userId)
+            );
+        });
 
         int from = Math.toIntExact(pageable.getOffset());
         int size = Math.min((from + pageable.getPageSize()), user.getItems().size());

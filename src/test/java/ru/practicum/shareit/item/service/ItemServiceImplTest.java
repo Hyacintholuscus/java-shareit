@@ -54,7 +54,6 @@ class ItemServiceImplTest {
     private User user;
     private Booking lastBooking;
     private Booking nextBooking;
-    private ItemRequest itemRequest;
 
     @BeforeEach
     void beforeEach() {
@@ -121,7 +120,7 @@ class ItemServiceImplTest {
         assertEquals(expectedDto, createdDto);
 
         // Создание предмета с requestId
-        itemRequest = ItemRequest.builder()
+        final ItemRequest itemRequest = ItemRequest.builder()
                 .description("itemRequest description")
                 .creationDate(LocalDateTime.now().truncatedTo(ChronoUnit.MICROS))
                 .ownerId(user.getId())
@@ -321,7 +320,7 @@ class ItemServiceImplTest {
         assertTrue(commentMessage.contains(expectedCommentMessage));
     }
 
-    private ItemDto createNewItemDtoWithBookingsAndComment() {
+    private ItemDto createNewItemDtoWithBookingsAndComment(LocalDateTime currentTime) {
         final Item newItem = itemStorage.save(Item.builder()
                 .name("item without booking 2")
                 .description("description 2")
@@ -344,27 +343,28 @@ class ItemServiceImplTest {
                 .build());
         final CommentDto commentDto = itemService.createComment(newItem.getId(), user.getId(),
                 LocalDateTime.now().truncatedTo(ChronoUnit.MICROS), getForCreateCommentDto());
-        return itemService.getById(owner.getId(), newItem.getId(),  LocalDateTime.now());
+        return itemService.getById(owner.getId(), newItem.getId(), currentTime);
     }
 
     @Test
     public void shouldGetAllByUserItem() {
         // Проверка получения пустого списка
         final Pageable pageable = PageRequest.of(0, 5);
+        final LocalDateTime currentTime = LocalDateTime.now().minusMinutes(25);
 
         final List<ItemDto> emptyList = itemService.getAllByUser(user.getId(), LocalDateTime.now(), pageable);
         assertNotNull(emptyList);
         assertTrue(emptyList.isEmpty());
 
         final ItemDto dtoWithoutBookings = itemService.getById(owner.getId(),
-                itemWithoutBookings.getId(), LocalDateTime.now());
+                itemWithoutBookings.getId(), currentTime);
         final ItemDto dtoWithBookings = itemService.getById(owner.getId(),
-                itemWithBookings.getId(), LocalDateTime.now());
+                itemWithBookings.getId(), currentTime);
 
-        final ItemDto dtoWithComment = createNewItemDtoWithBookingsAndComment();
+        final ItemDto dtoWithComment = createNewItemDtoWithBookingsAndComment(currentTime);
 
         // Проверка получения списка предметов
-        final List<ItemDto> savedItemsDto = itemService.getAllByUser(owner.getId(), LocalDateTime.now(), pageable);
+        final List<ItemDto> savedItemsDto = itemService.getAllByUser(owner.getId(), currentTime, pageable);
 
         assertNotNull(savedItemsDto);
         assertEquals(3, savedItemsDto.size());

@@ -81,7 +81,8 @@ public class ItemController {
                                             @Positive(message = "Parameter 'size' should be positive")
                                             int size) {
         LocalDateTime currentTime = LocalDateTime.now();
-        Pageable pageable = PageRequest.of(from, size);
+        int page = from / size;
+        Pageable pageable = PageRequest.of(page, size);
         return itemService.getAllByUser(userId, currentTime, pageable);
     }
 
