@@ -1,6 +1,5 @@
 package ru.practicum.shareit.request.mapper;
 
-import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -10,16 +9,11 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Mapper(uses = {ItemMapper.class}, componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ItemRequestMapper {
-    @BeforeMapping
-    default void validate(ItemRequest itemRequest) {
-        if (itemRequest.getItems() == null) itemRequest.setItems(new ArrayList<>());
-    }
-
     @Mapping(source = "itemRequest.creationDate", target = "created")
+    @Mapping(source = "itemRequest.items", target = "items", defaultExpression = "java(new ArrayList<>())")
     ItemRequestDto toDto(ItemRequest itemRequest);
 
     @Mapping(target = "id", expression = "java(null)")
