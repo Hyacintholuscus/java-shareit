@@ -3,6 +3,7 @@ package ru.practicum.shareit.request.mapper;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.request.dto.CreateItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -11,7 +12,7 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-@Mapper(uses = {ItemMapper.class}, componentModel = "spring")
+@Mapper(uses = {ItemMapper.class}, componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ItemRequestMapper {
     @BeforeMapping
     default void validate(ItemRequest itemRequest) {

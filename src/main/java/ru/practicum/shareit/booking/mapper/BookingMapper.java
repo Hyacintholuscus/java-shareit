@@ -10,7 +10,8 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
-@Mapper(uses = {UserMapper.class, ItemMapper.class}, componentModel = "spring")
+@Mapper(uses = {UserMapper.class, ItemMapper.class}, componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BookingMapper {
     @Mapping(source = "booking.startDate", target = "start")
     @Mapping(source = "booking.endDate", target = "end")

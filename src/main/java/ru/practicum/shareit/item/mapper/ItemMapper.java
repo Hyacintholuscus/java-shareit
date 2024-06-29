@@ -3,13 +3,14 @@ package ru.practicum.shareit.item.mapper;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
 
-@Mapper(uses = {CommentMapper.class}, componentModel = "spring")
+@Mapper(uses = {CommentMapper.class}, componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ItemMapper {
     @BeforeMapping
     default void validate(Item item) {
