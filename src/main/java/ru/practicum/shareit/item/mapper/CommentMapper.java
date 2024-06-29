@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.CreateCommentDto;
 import ru.practicum.shareit.item.model.Comment;
@@ -8,27 +9,14 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
-@Component
-public class CommentMapper {
+@Mapper(componentModel = "spring")
+public interface CommentMapper {
+    @Mapping(source = "author.name", target = "authorName")
+    CommentDto toDto(Comment comment);
 
-    public Comment toComment(Long itemId,
-                             User author,
-                             LocalDateTime createdTime,
-                             CreateCommentDto dto) {
-        return Comment.builder()
-                .text(dto.getText())
-                .itemId(itemId)
-                .author(author)
-                .created(createdTime)
-                .build();
-    }
-
-    public CommentDto toDto(Comment comment) {
-        return CommentDto.builder()
-                .id(comment.getId())
-                .text(comment.getText())
-                .authorName(comment.getAuthor().getName())
-                .created(comment.getCreated())
-                .build();
-    }
+    @Mapping(target = "id", expression = "java(null)")
+    @Mapping(source = "itemId", target = "itemId")
+    @Mapping(source = "author", target = "author")
+    @Mapping(source = "created", target = "created")
+    Comment toComment(Long itemId, User author, LocalDateTime created, CreateCommentDto dto);
 }

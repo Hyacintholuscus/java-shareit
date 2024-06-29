@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.model;
 
 import lombok.*;
 
+import org.hibernate.Hibernate;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.model.ItemRequest;
 
@@ -38,7 +39,7 @@ public class User {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         User user = (User) o;
         if (id == null) return false;
         return Objects.equals(id, user.id);

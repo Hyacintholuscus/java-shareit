@@ -2,6 +2,7 @@ package ru.practicum.shareit.request.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -57,6 +58,7 @@ class ItemRequestControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Добавить запрос")
     @Test
     public void shouldCreateItemRequest() throws Exception {
         requestDto = createRequestDto();
@@ -76,6 +78,7 @@ class ItemRequestControllerTest {
         verifyNoMoreInteractions(itemRequestService);
     }
 
+    @DisplayName("Статус 400 при добавлении запроса")
     @Test
     public void shouldReturn400WhenWrongCreateItemRequest() throws Exception {
         // Проверка валидации userId
@@ -106,6 +109,7 @@ class ItemRequestControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Получить запрос по id")
     @Test
     public void shouldGetItemRequestById() throws Exception {
         requestDto = createRequestDto();
@@ -122,6 +126,7 @@ class ItemRequestControllerTest {
         verifyNoMoreInteractions(itemRequestService);
     }
 
+    @DisplayName("Статус 400 при получении запроса по id")
     @Test
     public void shouldReturn400WhenWrongGetItemRequestById() throws Exception {
         // Проверка валидации userId
@@ -143,6 +148,7 @@ class ItemRequestControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Получить запросы по id владельца")
     @Test
     public void shouldGetItemRequestsByOwner() throws Exception {
         requestDto = createRequestDto();
@@ -159,6 +165,7 @@ class ItemRequestControllerTest {
         verifyNoMoreInteractions(itemRequestService);
     }
 
+    @DisplayName("Статус 400 при получении запросов по id владельца")
     @Test
     public void shouldReturn400WhenWrongGetItemRequestsByOwner() throws Exception {
         // Проверка валидации userId
@@ -178,6 +185,7 @@ class ItemRequestControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Получить все запросы от других пользователей")
     @Test
     public void shouldGetAllItemRequests() throws Exception {
         requestDto = createRequestDto();
@@ -194,6 +202,7 @@ class ItemRequestControllerTest {
         verifyNoMoreInteractions(itemRequestService);
     }
 
+    @DisplayName("Статус 400 при получении всех запросов от других пользователей")
     @Test
     public void shouldReturn400WhenWrongGetAllItemRequests() throws Exception {
         // Проверка валидации userId

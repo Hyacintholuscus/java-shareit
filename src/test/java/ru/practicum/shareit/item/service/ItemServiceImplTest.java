@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -108,6 +109,7 @@ class ItemServiceImplTest {
                 .build();
     }
 
+    @DisplayName("Добавить предмет")
     @Test
     public void shouldCreateItem() {
         // Создание предмета без requestId
@@ -136,6 +138,7 @@ class ItemServiceImplTest {
         assertEquals(expectedDtoWithRequestId, createdDtoWithRequestId);
     }
 
+    @DisplayName("Исключения при добавлении предмета")
     @Test
     public void shouldThrowWhenCreateItem() {
         final ItemDto itemDto = createItemDtoWithoutRequest();
@@ -161,6 +164,7 @@ class ItemServiceImplTest {
         assertTrue(requestMessage.contains(expectedRequestMessage));
     }
 
+    @DisplayName("Добавить комментарий")
     @Test
     public void shouldCreateComment() {
         final LocalDateTime creationTime = LocalDateTime.now().truncatedTo(ChronoUnit.MICROS);
@@ -180,6 +184,7 @@ class ItemServiceImplTest {
         assertEquals(List.of(commentDto), dtoWithComment.getComments());
     }
 
+    @DisplayName("Исключение при добавлении комментария")
     @Test
     public void shouldThrowWhenCreateComment() {
         final LocalDateTime creationTime = LocalDateTime.now().truncatedTo(ChronoUnit.MICROS);
@@ -194,6 +199,7 @@ class ItemServiceImplTest {
         assertTrue(commentMessage.contains(expectedCommentMessage));
     }
 
+    @DisplayName("Обновить предмет")
     @Test
     public void shouldUpdateItem() {
         // Проверка обновления полей Item без бронирований
@@ -232,6 +238,7 @@ class ItemServiceImplTest {
         assertEquals(expectedWithBookingDto, updatedDtoWithBooking);
     }
 
+    @DisplayName("Исключения при обновлении предмета")
     @Test
     public void shouldThrowWhenUpdateItem() {
         final Map<String, Object> fieldsToUpdate = new HashMap<>();
@@ -248,6 +255,7 @@ class ItemServiceImplTest {
         assertTrue(commentMessage.contains(expectedCommentMessage));
     }
 
+    @DisplayName("Удалить предмет")
     @Test
     public void shouldDeleteItem() {
         // Проверка удаления предмета без бронирований
@@ -269,6 +277,7 @@ class ItemServiceImplTest {
         assertNull(nullNextBooking);
     }
 
+    @DisplayName("Исключение при удалении предмета")
     @Test
     public void shouldThrowWhenDeleteItem() {
         final Exception commentException = assertThrows(NoAccessException.class, () -> {
@@ -279,6 +288,7 @@ class ItemServiceImplTest {
         assertTrue(commentMessage.contains(expectedCommentMessage));
     }
 
+    @DisplayName("Получить предмет по id")
     @Test
     public void shouldGetByIdItem() {
         // Проверка получения предмета без бронирований
@@ -309,6 +319,7 @@ class ItemServiceImplTest {
         assertEquals(expectedWithoutBookingDto, savedWithoutBookingDto);
     }
 
+    @DisplayName("Исключение при получении предмета по id")
     @Test
     public void shouldThrowWhenGetByIdItem() {
         final Long wrongItemId = 9999L;
@@ -346,6 +357,7 @@ class ItemServiceImplTest {
         return itemService.getById(owner.getId(), newItem.getId(), currentTime);
     }
 
+    @DisplayName("Получить предметы по id владельца")
     @Test
     public void shouldGetAllByUserItem() {
         // Проверка получения пустого списка
@@ -371,6 +383,7 @@ class ItemServiceImplTest {
         assertTrue(savedItemsDto.containsAll(List.of(dtoWithComment, dtoWithoutBookings, dtoWithBookings)));
     }
 
+    @DisplayName("Исключение при получении предметов по id владельца")
     @Test
     public void shouldThrowWhenGetAllByUserItem() {
         final Long wrongUserId = 9999L;
@@ -383,6 +396,7 @@ class ItemServiceImplTest {
         assertTrue(commentMessage.contains(expectedCommentMessage));
     }
 
+    @DisplayName("Найти предметы по названию / описанию")
     @Test
     public void shouldSearchItem() {
         final Pageable pageable = PageRequest.of(0, 5);
@@ -406,6 +420,7 @@ class ItemServiceImplTest {
         assertTrue(searchWithoutDto.contains(dtoWithoutBookings));
     }
 
+    @DisplayName("Исключение при получении предметов по названию / описанию")
     @Test
     public void shouldReturnCorrectPagination() {
         final ItemDto dtoWithoutBookings = itemService.getById(owner.getId(),

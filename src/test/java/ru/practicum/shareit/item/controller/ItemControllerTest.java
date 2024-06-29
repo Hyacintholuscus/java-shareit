@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -76,6 +77,7 @@ class ItemControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Добавить предмет")
     @Test
     void shouldCreateItem() throws Exception {
         itemDto = createItemDto();
@@ -92,6 +94,7 @@ class ItemControllerTest {
         verifyNoMoreInteractions(itemService);
     }
 
+    @DisplayName("Статус 400 при добавлении предмета")
     @Test
     public void shouldReturn400WhenWrongCreateItem() throws Exception {
         // Проверка валидации userId
@@ -139,6 +142,7 @@ class ItemControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Добавить комментарий")
     @Test
     void shouldCreateComment() throws Exception {
         commentDto = createCommentDto();
@@ -164,6 +168,7 @@ class ItemControllerTest {
         verifyNoMoreInteractions(itemService);
     }
 
+    @DisplayName("Статус 400 при добавлении комментария")
     @Test
     public void shouldReturn400WhenWrongCreateComment() throws Exception {
         // Проверка валидации itemId
@@ -201,6 +206,7 @@ class ItemControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Обновить предмет")
     @Test
     void shouldUpdateItem() throws Exception {
         itemDto = createItemDto();
@@ -221,6 +227,7 @@ class ItemControllerTest {
         verifyNoMoreInteractions(itemService);
     }
 
+    @DisplayName("Статус 400 при обновлении предмета")
     @Test
     public void shouldReturn400WhenWrongUpdateItem() throws Exception {
         // Проверка валидации itemId
@@ -243,6 +250,7 @@ class ItemControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Получить предмет по id")
     @Test
     void shouldGetItemById() throws Exception {
         itemDto = createItemDto();
@@ -258,6 +266,7 @@ class ItemControllerTest {
         verifyNoMoreInteractions(itemService);
     }
 
+    @DisplayName("Статус 400 при получении предмета по id")
     @Test
     public void shouldReturn400WhenWrongGetItemById() throws Exception {
         // Проверка валидации itemId
@@ -283,6 +292,7 @@ class ItemControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Получить предметы по id владельца")
     @Test
     void shouldGetItemsByUser() throws Exception {
         itemDto = createItemDto();
@@ -299,6 +309,7 @@ class ItemControllerTest {
         verifyNoMoreInteractions(itemService);
     }
 
+    @DisplayName("Статус 400 при получении предметов по id владельца")
     @Test
     public void shouldReturn400WhenWrongGetItemsByUser() throws Exception {
         // Проверка валидации userId
@@ -325,6 +336,7 @@ class ItemControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Найти предметы по названию / описанию")
     @Test
     void shouldSearchItems() throws Exception {
         itemDto = createItemDto();
@@ -344,6 +356,7 @@ class ItemControllerTest {
         verifyNoMoreInteractions(itemService);
     }
 
+    @DisplayName("Статус 400 при поиске предметов по названию / описанию")
     @Test
     public void shouldReturn400WhenWrongSearchItems() throws Exception {
         // Проверка валидации from
@@ -364,6 +377,7 @@ class ItemControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Удалить предмет")
     @Test
     void shouldDeleteItem() throws Exception {
         when(itemService.delete(anyLong(), anyLong()))
@@ -378,6 +392,7 @@ class ItemControllerTest {
         verifyNoMoreInteractions(itemService);
     }
 
+    @DisplayName("Статус 400 при удалении предмета")
     @Test
     public void shouldReturn400WhenWrongDeleteItem() throws Exception {
         // Проверка валидации userId

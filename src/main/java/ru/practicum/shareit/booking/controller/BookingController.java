@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,7 +20,6 @@ import java.util.List;
 @RequestMapping("/bookings")
 @RequiredArgsConstructor
 @Validated
-@Slf4j
 public class BookingController {
     private final BookingService bookingService;
 

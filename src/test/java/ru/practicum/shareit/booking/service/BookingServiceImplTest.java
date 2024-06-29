@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -66,6 +67,7 @@ class BookingServiceImplTest {
                 .build();
     }
 
+    @DisplayName("Добавить бронирование")
     @Test
     public void shouldCreateBooking() {
         bookingDto = bookingService.create(booker.getId(), creationDto);
@@ -79,6 +81,7 @@ class BookingServiceImplTest {
         assertEquals(booker.getId(), bookingDto.getBooker().getId());
     }
 
+    @DisplayName("Исключения при добавлении бронирования")
     @Test
     public void shouldThrowWhenCreateBooking() {
         // Проверка времени: начало должно быть раньше конца
@@ -131,6 +134,7 @@ class BookingServiceImplTest {
         assertTrue(itemStatusMessage.contains(expectedItemStatusMessage));
     }
 
+    @DisplayName("Обновить статуса бронирования")
     @Test
     public void shouldUpdateStatusBooking() {
         // Проверка с принятием бронирования
@@ -157,6 +161,7 @@ class BookingServiceImplTest {
         assertEquals(expectedRejectedDto, dtoRejected);
     }
 
+    @DisplayName("Исключения при обновлении статуса бронирования")
     @Test
     public void shouldThrowWhenUpdateStatusBooking() {
         bookingDto = bookingService.create(booker.getId(), creationDto);
@@ -207,6 +212,7 @@ class BookingServiceImplTest {
         assertTrue(changeStatusAfterRejMessage.contains(expectedChangeStatusAfterRejMessage));
     }
 
+    @DisplayName("Удалить бронирование")
     @Test
     public void shouldDeleteBooking() {
         bookingDto = bookingService.create(booker.getId(), creationDto);
@@ -231,6 +237,7 @@ class BookingServiceImplTest {
 
     }
 
+    @DisplayName("Исключения при удалении бронирования")
     @Test
     public void shouldThrowWhenDeleteBooking() {
         // Проверка удаления бронирования не бронирующим
@@ -245,6 +252,7 @@ class BookingServiceImplTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    @DisplayName("Получить бронирование по id")
     @Test
     public void shouldFindByIdBooking() {
         // Проверка получения бронирования бронирующим
@@ -261,6 +269,7 @@ class BookingServiceImplTest {
         assertEquals(bookingDto, receivedOwnerItemDto);
     }
 
+    @DisplayName("Исключения при получении бронирования по id")
     @Test
     public void shouldThrowWhenFindByIdBooking() {
         bookingDto = bookingService.create(booker.getId(), creationDto);
@@ -276,6 +285,7 @@ class BookingServiceImplTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    @DisplayName("Получить бронирования по id бронирующего")
     @Test
     public void findAllByBooker() {
         bookingDto = bookingService.create(booker.getId(), creationDto);
@@ -394,6 +404,7 @@ class BookingServiceImplTest {
         assertEquals(expectedAllBookings, allBookings);
     }
 
+    @DisplayName("Получить бронирования по id бронирующего с разной пагинацией")
     @Test
     public void shouldReturnCorrectPaginationByBooker() {
         final LocalDateTime currentTime = LocalDateTime.now();
@@ -438,6 +449,7 @@ class BookingServiceImplTest {
         assertEquals(bookingsAt3, new ArrayList<>(List.of(bookingDto)));
     }
 
+    @DisplayName("Исключения при получении бронирования по id бронирующего")
     @Test
     public void shouldThrowWhenFindAllByBooker() {
         final LocalDateTime currentTime = LocalDateTime.now();
@@ -463,6 +475,7 @@ class BookingServiceImplTest {
         assertTrue(wrongStatusMessage.contains(expectedWrongStatusMessage));
     }
 
+    @DisplayName("Получить бронирования по id владельца предметов")
     @Test
     public void shouldFindAllByOwnerItemsBooking() {
         final Pageable pageable = PageRequest.of(0,
@@ -605,6 +618,7 @@ class BookingServiceImplTest {
         assertEquals(allBookings, expectedAllBookings);
     }
 
+    @DisplayName("Получить бронирования по id владельца предметов с разной пагинацией")
     @Test
     public void shouldReturnCorrectPaginationByOwnerItemsBooking() {
         final LocalDateTime currentTime = LocalDateTime.now();
@@ -649,6 +663,7 @@ class BookingServiceImplTest {
         assertEquals(bookingsAt3, new ArrayList<>(List.of(bookingDto)));
     }
 
+    @DisplayName("Исключения при получении бронирования по id владельца предметов")
     @Test
     public void shouldThrowWhenFindAllByOwnerItemsBooking() {
         final LocalDateTime currentTime = LocalDateTime.now();

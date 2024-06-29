@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -52,6 +53,7 @@ public class UserControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Добавить пользователя")
     @Test
     public void shouldCreateUser() throws Exception {
         userDto = createDto();
@@ -68,6 +70,7 @@ public class UserControllerTest {
         verifyNoMoreInteractions(userService);
     }
 
+    @DisplayName("Статус 400 при добавлении пользователя")
     @Test
     public void shouldReturn400WhenWrongCreateUser() throws Exception {
         // Проверка валидации имени
@@ -104,6 +107,7 @@ public class UserControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Обновить пользователя")
     @Test
     public void shouldUpdateUser() throws Exception {
         userDto = createDto();
@@ -128,6 +132,7 @@ public class UserControllerTest {
         verifyNoMoreInteractions(userService);
     }
 
+    @DisplayName("Статус 400 при обновлении пользователя")
     @Test
     public void shouldReturn400WhenWrongUpdateUser() throws Exception {
         userDto = createDto();
@@ -138,6 +143,7 @@ public class UserControllerTest {
         verifyNoInteractions(userService);
     }
 
+    @DisplayName("Получить всех пользователей")
     @Test
     public void shouldGetAllUsers() throws Exception {
         userDto = createDto();
@@ -160,6 +166,7 @@ public class UserControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Получить пользователя по id")
     @Test
     public void shouldGetUserById() throws Exception {
         userDto = createDto();
@@ -175,6 +182,7 @@ public class UserControllerTest {
         verifyNoMoreInteractions(userService);
     }
 
+    @DisplayName("Статус 400 при получении пользователя по id")
     @Test
     public void shouldReturn400WhenWrongGetUserById() throws Exception {
         assertEquals(400, getUserResponse(0L).getStatus());
@@ -190,6 +198,7 @@ public class UserControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Удалить пользователя")
     @Test
     public void shouldDeleteUser() throws Exception {
         userDto = createDto();
@@ -205,6 +214,7 @@ public class UserControllerTest {
         verifyNoMoreInteractions(userService);
     }
 
+    @DisplayName("Статус 400 при удалении пользователя")
     @Test
     public void shouldReturn400WhenWrongDeleteUser() throws Exception {
         assertEquals(400, deleteUserResponse(0L).getStatus());

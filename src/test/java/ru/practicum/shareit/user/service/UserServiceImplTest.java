@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +29,7 @@ public class UserServiceImplTest {
                 .build();
     }
 
+    @DisplayName("Добавить, обновить пользователя, получить его по id, получить всех и удалить пользователя по id")
     @Test
     public void shouldSaveUpdateGetAndDeleteUser() {
         // Проверка метода getAll() без пользователей в БД
@@ -86,6 +88,7 @@ public class UserServiceImplTest {
         assertTrue(receivedList.contains(savedNewDto));
     }
 
+    @DisplayName("Исключение - дубликат почты - при добавлении пользователя")
     @Test
     public void shouldThrowWhenCreate() {
         dto = createUserDto();

@@ -2,6 +2,7 @@ package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +41,7 @@ public class ItemRequestServiceImplTest {
                 .build();
     }
 
+    @DisplayName("Добавить запрос")
     @Test
     public void shouldCreateItemRequest() {
         final LocalDateTime creationTime = LocalDateTime.now().truncatedTo(ChronoUnit.MICROS);
@@ -51,6 +53,7 @@ public class ItemRequestServiceImplTest {
         assertEquals(creationTime, requestDto.getCreated());
     }
 
+    @DisplayName("Исключение при добавлении запроса")
     @Test
     public void shouldThrowWhenCreateItemRequest() {
         final LocalDateTime creationTime = LocalDateTime.now().truncatedTo(ChronoUnit.MICROS);
@@ -63,6 +66,7 @@ public class ItemRequestServiceImplTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    @DisplayName("Получить запрос по id")
     @Test
     public void shouldGetByIdItemRequest() {
         final LocalDateTime creationTime = LocalDateTime.now().truncatedTo(ChronoUnit.MICROS);
@@ -73,6 +77,7 @@ public class ItemRequestServiceImplTest {
         assertEquals(requestDto, receivedDto);
     }
 
+    @DisplayName("Исключения при получении запроса по id")
     @Test
     public void shouldThrowWhenGetByIdItemRequest() {
         // Проверка проброса исключения NotFoundException с несуществующим userId
@@ -96,6 +101,7 @@ public class ItemRequestServiceImplTest {
         assertTrue(actualMess.contains(expectedMess));
     }
 
+    @DisplayName("Получить запросы по id владельца")
     @Test
     public void shouldGetByOwnerIdItemRequest() {
         final LocalDateTime creationTime = LocalDateTime.now().truncatedTo(ChronoUnit.MICROS);
@@ -118,6 +124,7 @@ public class ItemRequestServiceImplTest {
         assertTrue(listNewUser.isEmpty());
     }
 
+    @DisplayName("Исключение при получении запросов по id владельца")
     @Test
     public void shouldThrowWhenGetByOwnerIdItemRequest() {
         // Проверка проброса исключения NotFoundException с несуществующим userId
@@ -130,6 +137,7 @@ public class ItemRequestServiceImplTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    @DisplayName("Получить все запросы от других пользователей")
     @Test
     void shouldGetAllRequest() {
         // Проверка метода getAll() без ItemRequest в БД
@@ -183,6 +191,7 @@ public class ItemRequestServiceImplTest {
         assertTrue(listWithRequestsSize3.contains(requestDto));
     }
 
+    @DisplayName("Исключение при получении всех запросов от других пользователей")
     @Test
     public void shouldThrowWhenGetAllItemRequest() {
         // Проверка проброса исключения NotFoundException с несуществующим userId

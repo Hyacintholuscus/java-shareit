@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -68,6 +69,7 @@ class BookingControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Добавить бронирование")
     @Test
     void shouldCreateBooking() throws Exception {
         creationDto = getForcreateBookingDto();
@@ -85,6 +87,7 @@ class BookingControllerTest {
         verifyNoMoreInteractions(bookingService);
     }
 
+    @DisplayName("Статус 400 при добавлении бронирования")
     @Test
     public void shouldReturn400WhenWrongCreateBooking() throws Exception {
         // Проверка валидации bookerId
@@ -138,6 +141,7 @@ class BookingControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Обновить статуса бронирования")
     @Test
     void shouldUpdateStatus() throws Exception {
         bookingDto = createBookingDto();
@@ -154,6 +158,7 @@ class BookingControllerTest {
         verifyNoMoreInteractions(bookingService);
     }
 
+    @DisplayName("Статус 400 при обновлении бронирования")
     @Test
     public void shouldReturn400WhenWrongUpdateStatus() throws Exception {
         // Проверка валидации ownerId
@@ -175,6 +180,7 @@ class BookingControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Удалить бронирование")
     @Test
     void shouldDelete() throws Exception {
         when(bookingService.delete(anyLong(), anyLong()))
@@ -189,6 +195,7 @@ class BookingControllerTest {
         verifyNoMoreInteractions(bookingService);
     }
 
+    @DisplayName("Статус 400 при удалении бронирования")
     @Test
     public void shouldReturn400WhenWrongDeleteBooking() throws Exception {
         // Проверка валидации bookerId
@@ -210,6 +217,7 @@ class BookingControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Получить бронирование по id")
     @Test
     void shouldFindById() throws Exception {
         bookingDto = createBookingDto();
@@ -225,6 +233,7 @@ class BookingControllerTest {
         verifyNoMoreInteractions(bookingService);
     }
 
+    @DisplayName("Статус 400 при получении бронирования по id")
     @Test
     public void shouldReturn400WhenWrongFindByIdBooking() throws Exception {
         // Проверка валидации userId
@@ -252,6 +261,7 @@ class BookingControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Получить бронирования по id бронирующего")
     @Test
     void shouldFindAllByBooker() throws Exception {
         bookingDto = createBookingDto();
@@ -275,6 +285,7 @@ class BookingControllerTest {
         verifyNoMoreInteractions(bookingService);
     }
 
+    @DisplayName("Статус 400 при получении бронирований по id бронирующего")
     @Test
     public void shouldReturn400WhenWrongFindAllByBooker() throws Exception {
         // Проверка валидации bookerId
@@ -303,6 +314,7 @@ class BookingControllerTest {
         return result.getResponse();
     }
 
+    @DisplayName("Получить бронирования по id владельца предметов")
     @Test
     void shouldFindAllByOwnerBooking() throws Exception {
         bookingDto = createBookingDto();
@@ -326,6 +338,7 @@ class BookingControllerTest {
         verifyNoMoreInteractions(bookingService);
     }
 
+    @DisplayName("Статус 400 при получении бронирований по id владельца предметов")
     @Test
     public void shouldReturn400WhenWrongFindAllByOwnerBooking() throws Exception {
         // Проверка валидации ownerId
