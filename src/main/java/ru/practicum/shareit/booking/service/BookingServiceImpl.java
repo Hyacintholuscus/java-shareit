@@ -2,14 +2,14 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.mapper.BookingMapper;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingRequestDto;
-import ru.practicum.shareit.booking.mapper.BookingMapper;
+import ru.practicum.shareit.booking.dto.CreateBookingDto;
 import ru.practicum.shareit.booking.storage.BookingStorage;
 import ru.practicum.shareit.exception.NoAccessException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -21,9 +21,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,7 +49,7 @@ public class BookingServiceImpl  implements BookingService {
     }
 
     @Override
-    public BookingDto create(Long bookerId, BookingRequestDto requestDto) {
+    public BookingDto create(Long bookerId, CreateBookingDto requestDto) {
         log.info("Запрос на создание бронирования от пользователя с id {}", bookerId);
 
         if (!requestDto.getStart().isBefore(requestDto.getEnd())) {
@@ -146,35 +144,39 @@ public class BookingServiceImpl  implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BookingDto> findAllByBooker(Long bookerId, String state, LocalDateTime currentTime) {
+    public List<BookingDto> findAllByBooker(Long bookerId,
+                                            String state,
+                                            LocalDateTime currentTime,
+                                            Pageable pageable) {
         User booker = getUser(bookerId);
-        Sort sort = Sort.by(Sort.Direction.DESC, "startDate");
         List<Booking> bookings = new ArrayList<>();
         switch (state) {
             case "CURRENT":
                 log.info("Запрос от бронирующего с id {} получить список текущих бронирований.", bookerId);
-                bookings = bookingStorage.findCurrentByBookerId(bookerId, currentTime, sort);
+                bookings = bookingStorage.findCurrentByBookerId(bookerId, currentTime, pageable);
                 break;
             case "FUTURE":
                 log.info("Запрос от бронирующего с id {} получить список будущих бронирований.", bookerId);
-                bookings = bookingStorage.findByBookerIdAndStartDateIsAfter(bookerId, currentTime, sort);
+                bookings = bookingStorage.findByBookerIdAndStartDateIsAfter(bookerId, currentTime, pageable);
                 break;
             case "WAITING":
                 log.info("Запрос от бронирующего с id {} получить список бронирований, ожидающих подтверждения.",
                         bookerId);
-                bookings = bookingStorage.findByBookerIdAndStatusIs(bookerId, BookingStatus.WAITING, sort);
+                bookings = bookingStorage.findByBookerIdAndStatusIs(bookerId, BookingStatus.WAITING, pageable);
                 break;
             case "REJECTED":
                 log.info("Запрос от бронирующего с id {} получить список отклонённых бронирований.", bookerId);
-                bookings = bookingStorage.findByBookerIdAndStatusIs(bookerId, BookingStatus.REJECTED, sort);
+                bookings = bookingStorage.findByBookerIdAndStatusIs(bookerId, BookingStatus.REJECTED, pageable);
                 break;
             case "PAST":
                 log.info("Запрос от бронирующего с id {} получить список завершённых бронирований.", bookerId);
-                bookings = bookingStorage.findByBookerIdAndEndDateIsBefore(bookerId, currentTime, sort);
+                Set<BookingStatus> statuses = Set.of(BookingStatus.WAITING, BookingStatus.REJECTED);
+                bookings = bookingStorage.findByBookerIdAndEndDateIsBeforeAndStatusNotIn(bookerId,
+                        currentTime, pageable, statuses);
                 break;
             case "ALL":
                 log.info("Запрос от бронирующего с id {} получить список всех бронирований.", bookerId);
-                bookings = bookingStorage.findByBookerId(bookerId, sort);
+                bookings = bookingStorage.findByBookerId(bookerId, pageable);
                 break;
             default:
                 throwBadSearchRequest(bookerId, state);
@@ -186,38 +188,40 @@ public class BookingServiceImpl  implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BookingDto> findAllByOwnerItems(Long ownerId, String state, LocalDateTime currentTime) {
+    public List<BookingDto> findAllByOwnerItems(Long ownerId,
+                                                String state,
+                                                LocalDateTime currentTime,
+                                                Pageable pageable) {
         User owner = getUser(ownerId);
         if (owner.getItems().isEmpty()) {
             return new ArrayList<>();
         }
-        Sort sort = Sort.by(Sort.Direction.DESC, "endDate");
         List<Booking> bookings = new ArrayList<>();
         switch (state) {
             case "CURRENT":
                 log.info("Запрос от владельца вещей с id {} получить список текущих бронирований.", ownerId);
-                bookings = bookingStorage.findCurrentByOwner(ownerId, currentTime, sort);
+                bookings = bookingStorage.findCurrentByOwner(ownerId, currentTime, pageable);
                 break;
             case "FUTURE":
                 log.info("Запрос от владельца вещей с id {} получить список будущих бронирований.", ownerId);
-                bookings = bookingStorage.findFutureByOwner(ownerId, currentTime, sort);
+                bookings = bookingStorage.findFutureByOwner(ownerId, currentTime, pageable);
                 break;
             case "WAITING":
                 log.info("Запрос от владельца вещей с id {} получить список бронирований, ожидающих подтверждения.",
                         ownerId);
-                bookings = bookingStorage.findByOwnerByStatus(ownerId, BookingStatus.WAITING, sort);
+                bookings = bookingStorage.findByOwnerByStatus(ownerId, BookingStatus.WAITING, pageable);
                 break;
             case "REJECTED":
                 log.info("Запрос от владельца вещей с id {} получить список отклонённых бронирований.", ownerId);
-                bookings = bookingStorage.findByOwnerByStatus(ownerId, BookingStatus.REJECTED, sort);
+                bookings = bookingStorage.findByOwnerByStatus(ownerId, BookingStatus.REJECTED, pageable);
                 break;
             case "PAST":
                 log.info("Запрос от владельца вещей с id {} получить список завершённых бронирований.", ownerId);
-                bookings = bookingStorage.findPastByOwner(ownerId, currentTime, sort);
+                bookings = bookingStorage.findPastByOwner(ownerId, currentTime, pageable);
                 break;
             case "ALL":
                 log.info("Запрос от владельца вещей с id {} получить список всех бронирований.", ownerId);
-                bookings = bookingStorage.findAllByOwner(ownerId, sort);
+                bookings = bookingStorage.findAllByOwner(ownerId, pageable);
                 break;
             default:
                 throwBadSearchRequest(ownerId, state);

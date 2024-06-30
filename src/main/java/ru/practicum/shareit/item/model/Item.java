@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.model;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
+@Generated
 @Entity
 @Table(name = "items")
 public class Item {
@@ -32,11 +34,13 @@ public class Item {
     private Long ownerId;
     @OneToMany(mappedBy = "itemId")
     private List<Comment> comments;
+    @Column(name = "request_id")
+    private Long requestId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Item item = (Item) o;
         if (id == null) return false;
         return Objects.equals(id, item.id);

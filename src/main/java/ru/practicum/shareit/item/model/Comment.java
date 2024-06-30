@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.model;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
+@Generated
 @Entity
 @Table(name = "comments")
 public class Comment {
@@ -34,7 +36,7 @@ public class Comment {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Comment comment = (Comment) o;
         if (id == null) return false;
         return Objects.equals(id, comment.id);

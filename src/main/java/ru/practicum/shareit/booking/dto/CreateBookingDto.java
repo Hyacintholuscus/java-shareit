@@ -7,18 +7,17 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Value
 @Builder
-public class BookingRequestDto {
+@With
+public class CreateBookingDto {
     @NotNull(message = "Start time shouldn't be null.")
     @Future(message = "Start time should be in future.")
-    private LocalDateTime start;
+    LocalDateTime start;
     @NotNull(message = "End time shouldn't be null.")
     @Future(message = "End time should be in future.")
-    private LocalDateTime end;
+    LocalDateTime end;
     @NotNull(message = "Item's id shouldn't be null.")
     @Positive(message = "End time should be positive.")
-    private Long itemId;
+    Long itemId;
 }

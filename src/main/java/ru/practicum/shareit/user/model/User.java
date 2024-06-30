@@ -2,7 +2,9 @@ package ru.practicum.shareit.user.model;
 
 import lombok.*;
 
+import org.hibernate.Hibernate;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.ItemRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,6 +18,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
+@Generated
 @Entity
 @Table(name = "users")
 public class User {
@@ -30,11 +33,13 @@ public class User {
     private String email;
     @OneToMany(mappedBy = "ownerId")
     private List<Item> items;
+    @OneToMany(mappedBy = "ownerId")
+    private List<ItemRequest> requests;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         User user = (User) o;
         if (id == null) return false;
         return Objects.equals(id, user.id);

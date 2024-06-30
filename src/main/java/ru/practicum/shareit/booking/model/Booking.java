@@ -1,7 +1,7 @@
 package ru.practicum.shareit.booking.model;
 
 import lombok.*;
-import ru.practicum.shareit.booking.BookingStatus;
+import org.hibernate.Hibernate;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -14,6 +14,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
+@Generated
 @Entity
 @Table(name = "bookings")
 public class Booking {
@@ -36,7 +37,7 @@ public class Booking {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Booking booking = (Booking) o;
         if (id == null) return false;
         return Objects.equals(id, booking.id);
