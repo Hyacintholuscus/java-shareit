@@ -1,5 +1,6 @@
 package ru.practicum.shareit.exception;
 
+import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.ObjectError;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@Generated
 @RestControllerAdvice(assignableTypes = {
         UserController.class,
         ItemController.class,
