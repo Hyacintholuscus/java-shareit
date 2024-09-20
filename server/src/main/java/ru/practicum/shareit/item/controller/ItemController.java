@@ -35,7 +35,7 @@ public class ItemController {
         return itemService.createComment(itemId, authorId, createdTime, commentRequestDto);
     }
 
-    @PatchMapping("{itemId}")
+    @PatchMapping("/{itemId}")
     public ItemDto updateItem(@PathVariable Long itemId,
                               @RequestHeader("X-Sharer-User-Id") Long userId,
                               @RequestBody Map<String, Object> fields) {
